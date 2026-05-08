@@ -1,122 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useEffect } from "react";
+import { USUARIOS, ORDENES_INICIALES } from "./data/datos";
+import Login from "./components/Login";
+import TopBar from "./components/TopBar";
+import TabSolicitud from "./components/TabSolicitud";
+import TabMantenimiento from "./components/TabMantenimiento";
+import TabHistorial from "./components/TabHistorial";
+import TabReportes from "./components/TabReportes";
+import TabAdmin from "./components/TabAdmin";
+import ModalMantenimiento from "./components/ModalMantenimiento";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [usuario, setUsuario] = useState(null);
+  const [usuarios, setUsuarios] = useState(USUARIOS);
+  const [tab, setTab] = useState("solicitud");
+  const [ordenes, setOrdenes] = useState(ORDENES_INICIALES);
+  const [modal, setModal] = useState(null);
+  const [alert, setAlert] = useState(null);
+
+  useEffect(() => {
+    if (alert) {
+      const t = setTimeout(() => setAlert(null), 3500);
+      return () => clearTimeout(t);
+    }
+  }, [alert]);
+
+  const showAlert = (msg, type = "success") => setAlert({ msg, type });
+
+  const canAccess = (section) => {
+    if (!usuario) return false;
+    const r = usuario.rol;
+    if (section === "solicitud") return true;
+    if (section === "mantenimiento") return r === "mantenimiento" || r === "admin";
+    if (section === "historial") return r === "supervisor" || r === "admin" || r === "mantenimiento";
+    if (section === "reportes") return r === "supervisor" || r === "admin";
+    if (section === "admin") return r === "admin";
+    return false;
+  };
+
+  if (!usuario) return <Login usuarios={usuarios} onLogin={setUsuario} />;
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div className="envi-app">
+      <TopBar
+        usuario={usuario}
+        tab={tab}
+        setTab={setTab}
+        onLogout={() => { setUsuario(null); setTab("solicitud"); }}
+        canAccess={canAccess}
+      />
+      <div className="main-content">
+        {alert && <div className={"alert alert-" + alert.type}>{alert.msg}</div>}
+        {tab === "solicitud" && <TabSolicitud usuario={usuario} ordenes={ordenes} setOrdenes={setOrdenes} showAlert={showAlert} />}
+        {tab === "mantenimiento" && canAccess("mantenimiento") && <TabMantenimiento ordenes={ordenes} setModal={setModal} />}
+        {tab === "historial" && canAccess("historial") && <TabHistorial ordenes={ordenes} usuario={usuario} />}
+        {tab === "reportes" && canAccess("reportes") && <TabReportes ordenes={ordenes} />}
+        {tab === "admin" && canAccess("admin") && <TabAdmin usuarios={usuarios} setUsuarios={setUsuarios} showAlert={showAlert} />}
+      </div>
+      {modal && (
+        <ModalMantenimiento
+          orden={modal}
+          onClose={() => setModal(null)}
+          setOrdenes={setOrdenes}
+          showAlert={showAlert}
+        />
+      )}
+    </div>
+  );
 }
-
-export default App
