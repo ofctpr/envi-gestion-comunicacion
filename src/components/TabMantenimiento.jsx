@@ -1,5 +1,3 @@
-import { MAQUINAS } from "../data/datos";
-
 export default function TabMantenimiento({ ordenes, setModal }) {
   const activas = ordenes.filter(
     (o) => o.destino.includes("Mantenimiento") && (o.estado === "Pendiente" || o.estado === "En curso")

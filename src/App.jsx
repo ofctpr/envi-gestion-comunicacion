@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { USUARIOS, ORDENES_INICIALES } from "./data/datos";
+import { getUsuarios, getOrdenes } from "./data/datos";
 import Login from "./components/Login";
 import TopBar from "./components/TopBar";
 import TabSolicitud from "./components/TabSolicitud";
@@ -12,11 +12,23 @@ import "./App.css";
 
 export default function App() {
   const [usuario, setUsuario] = useState(null);
-  const [usuarios, setUsuarios] = useState(USUARIOS);
+  const [usuarios, setUsuarios] = useState([]);
   const [tab, setTab] = useState("solicitud");
-  const [ordenes, setOrdenes] = useState(ORDENES_INICIALES);
+  const [ordenes, setOrdenes] = useState([]);
   const [modal, setModal] = useState(null);
   const [alert, setAlert] = useState(null);
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    async function cargarDatos() {
+      const [u, o] = await Promise.all([getUsuarios(), getOrdenes()]);
+      console.log("usuarios cargados:", u);
+      setUsuarios(u);
+      setOrdenes(o);
+      setCargando(false);
+    }
+    cargarDatos();
+  }, []);
 
   useEffect(() => {
     if (alert) {
@@ -37,6 +49,12 @@ export default function App() {
     if (section === "admin") return r === "admin";
     return false;
   };
+
+  if (cargando) return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0d1117" }}>
+      <div style={{ color: "#8b949e", fontSize: 14 }}>Cargando sistema...</div>
+    </div>
+  );
 
   if (!usuario) return <Login usuarios={usuarios} onLogin={setUsuario} />;
 

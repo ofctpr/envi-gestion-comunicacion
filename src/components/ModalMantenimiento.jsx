@@ -1,14 +1,19 @@
-import { useState } from "react";
-import { MAQUINAS } from "../data/datos";
+import { useState, useEffect } from "react";
+import { getMaquinas } from "../data/datos";
 
 export default function ModalMantenimiento({ orden, onClose, setOrdenes, showAlert }) {
   const [step, setStep] = useState(orden.estado === "En curso" ? "resolucion" : "detalle");
   const [resolucion, setResolucion] = useState({ tecnico: "", tiempo: "", repuesto: "", herramientas: "", detalle: "" });
+  const [maquinas, setMaquinas] = useState({});
 
-  const maquinaKey = Object.keys(MAQUINAS).find((k) =>
+  useEffect(() => {
+    getMaquinas().then(setMaquinas);
+  }, []);
+
+  const maquinaKey = Object.keys(maquinas).find((k) =>
     orden.descripcion.toLowerCase().includes(k.toLowerCase())
   );
-  const maquina = maquinaKey ? MAQUINAS[maquinaKey] : null;
+  const maquina = maquinaKey ? maquinas[maquinaKey] : null;
 
   const aceptar = () => {
     setOrdenes((os) => os.map((o) => o.id === orden.id ? { ...o, estado: "En curso" } : o));

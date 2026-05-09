@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AREAS, SECTORES, TIPOS, PRIORIDADES } from "../data/datos";
+import { AREAS, SECTORES, TIPOS, PRIORIDADES, crearOrden } from "../data/datos";
 
 function nowStr() {
   return new Date().toLocaleString("es-AR", {
@@ -21,26 +21,30 @@ export default function TabSolicitud({ usuario, ordenes, setOrdenes, showAlert }
       destino: f.destino.includes(a) ? f.destino.filter((x) => x !== a) : [...f.destino, a],
     }));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.destino.length || !form.tipo || !form.descripcion.trim() || (needsPrio && !form.prioridad)) {
       showAlert("Completá todos los campos obligatorios.", "info");
       return;
     }
     const nueva = {
-      id: ordenes.length + 1,
       fecha: nowStr(),
       usuario: usuario.nombre,
       sector: form.sector,
       area: form.area,
-      destino: form.destino,
+      destino: JSON.stringify(form.destino),
       tipo: form.tipo,
       descripcion: form.descripcion,
       prioridad: needsPrio ? form.prioridad : null,
       estado: form.tipo === "Solicitud de trabajo" ? "Pendiente" : "Enviado",
       resolucion: null,
     };
-    setOrdenes((o) => [nueva, ...o]);
-    setDone(true);
+    const guardada = await crearOrden(nueva);
+    if (guardada) {
+      setOrdenes((o) => [{ ...guardada, destino: form.destino }, ...o]);
+      setDone(true);
+    } else {
+      showAlert("Error al guardar la solicitud. Intentá de nuevo.", "info");
+    }
   };
 
   const handleReset = () => { setForm(empty); setDone(false); };
