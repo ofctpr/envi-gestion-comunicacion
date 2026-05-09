@@ -51,22 +51,5 @@ export default function Login({ usuarios, onLogin }) {
         <button className="login-btn" onClick={handleLogin}>
           Ingresar al sistema
         </button>
-
-        <div className="demo-hint">
-          <p>Usuarios de demo — click para autocompletar</p>
-          <div className="demo-pills">
-            {usuarios.map((u) => (
-              <div
-                key={u.id}
-                className="demo-pill"
-                onClick={() => { setUser(u.username); setPass(u.password); setErr(""); }}
-              >
-                {u.username} · {u.rol}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
