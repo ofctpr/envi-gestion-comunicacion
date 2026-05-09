@@ -19,7 +19,7 @@ export default function App() {
   const [alert, setAlert] = useState(null);
   const [cargando, setCargando] = useState(true);
 
-  useEffect(() => {
+  useEffect(() => { 
     async function cargarDatos() {
       const [u, o] = await Promise.all([getUsuarios(), getOrdenes()]);
       console.log("usuarios cargados:", u);
