@@ -2,7 +2,7 @@ import { supabase } from '../supabase'
 
 export const AREAS = ["Ingeniería", "Sistemas", "Mantenimiento", "Producción", "Calidad", "Logística", "RRHH"];
 export const SECTORES = ["Línea A", "Línea B", "Taller", "Administración", "Depósito", "Planta", "Oficinas"];
-export const TIPOS = ["Solicitud de trabajo", "Mensaje informativo", "Aviso", "Advertencia", "Urgencia"];
+export const TIPOS = ["Solicitud de trabajo", "Comunicado"];
 export const PRIORIDADES = ["Alta", "Media", "Baja"];
 
 export async function getUsuarios() {

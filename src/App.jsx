@@ -11,7 +11,9 @@ import ModalMantenimiento from "./components/ModalMantenimiento";
 import "./App.css";
 
 export default function App() {
-  const [usuario, setUsuario] = useState(null);
+  const [usuario, setUsuario] = useState(() => {
+  const saved = localStorage.getItem("envi_usuario");
+  return saved ? JSON.parse(saved) : null;});
   const [usuarios, setUsuarios] = useState([]);
   const [tab, setTab] = useState("solicitud");
   const [ordenes, setOrdenes] = useState([]);
@@ -56,7 +58,7 @@ export default function App() {
     </div>
   );
 
-  if (!usuario) return <Login usuarios={usuarios} onLogin={setUsuario} />;
+  if (!usuario) return <Login usuarios={usuarios} onLogin={(u) => { setUsuario(u); localStorage.setItem("envi_usuario", JSON.stringify(u)); }} />;
 
   return (
     <div className="envi-app">
@@ -64,7 +66,7 @@ export default function App() {
         usuario={usuario}
         tab={tab}
         setTab={setTab}
-        onLogout={() => { setUsuario(null); setTab("solicitud"); }}
+        onLogout={() => { setUsuario(null); localStorage.removeItem("envi_usuario"); setTab("solicitud"); }}
         canAccess={canAccess}
       />
       <div className="main-content">
