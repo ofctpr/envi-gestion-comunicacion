@@ -41,3 +41,15 @@ export async function getMaquinas() {
     return acc;
   }, {});
 }
+
+export async function crearUsuario(usuario) {
+  const { data, error } = await supabase.from('usuarios').insert([usuario]).select()
+  if (error) { console.error(error); return null; }
+  return data[0];
+}
+
+export async function actualizarUsuario(id, cambios) {
+  const { error } = await supabase.from('usuarios').update(cambios).eq('id', id)
+  if (error) { console.error(error); return false; }
+  return true;
+}
