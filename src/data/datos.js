@@ -52,4 +52,10 @@ export async function actualizarUsuario(id, cambios) {
   const { error } = await supabase.from('usuarios').update(cambios).eq('id', id)
   if (error) { console.error(error); return false; }
   return true;
+  
+}
+export async function getMaquinasPorCategoria(categoria) {
+  const { data, error } = await supabase.from('maquinas').select('*').eq('categoria', categoria).eq('activa', true)
+  if (error) { console.error(error); return []; }
+  return data;
 }
