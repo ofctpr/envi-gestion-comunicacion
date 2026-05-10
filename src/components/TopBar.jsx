@@ -17,7 +17,7 @@ export default function TopBar({ usuario, tab, setTab, onLogout, canAccess }) {
   const navItems = [
     { key: "solicitud", label: "Nueva solicitud" },
     { key: "mantenimiento", label: "Mantenimiento" },
-    { key: "historial", label: "Ver pedidos" },
+    { key: "historial", label: "Historial" },
     { key: "reportes", label: "Reportes" },
     { key: "admin", label: "Administración" },
   ];
