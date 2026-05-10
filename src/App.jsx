@@ -72,7 +72,7 @@ export default function App() {
       <div className="main-content">
         {alert && <div className={"alert alert-" + alert.type}>{alert.msg}</div>}
         {tab === "solicitud" && <TabSolicitud usuario={usuario} ordenes={ordenes} setOrdenes={setOrdenes} showAlert={showAlert} />}
-        {tab === "mantenimiento" && canAccess("mantenimiento") && <TabMantenimiento ordenes={ordenes} setModal={setModal} />}
+       {tab === "mantenimiento" && canAccess("mantenimiento") && <TabMantenimiento ordenes={ordenes} setModal={setModal} setOrdenes={setOrdenes} usuario={usuario} showAlert={showAlert} />}
         {tab === "historial" && canAccess("historial") && <TabHistorial ordenes={ordenes} usuario={usuario} />}
         {tab === "reportes" && canAccess("reportes") && <TabReportes ordenes={ordenes} />}
         {tab === "admin" && canAccess("admin") && <TabAdmin usuarios={usuarios} setUsuarios={setUsuarios} showAlert={showAlert} />}
