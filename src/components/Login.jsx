@@ -41,7 +41,7 @@ export default function Login({ usuarios, onLogin }) {
             <LogoManzana size={90} />
           </div>
           <div>
-            <div className="login-brand">EnVi</div>
+            <div className="login-brand">EmVi</div>
             <div className="login-title">Sistema de Gestión</div>
           </div>
         </div>

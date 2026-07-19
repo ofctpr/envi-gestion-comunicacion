@@ -2,7 +2,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'DM Sans', sans-serif; }
-.envi-app { min-height: 100vh; background: #f0f2f5; color: #1a1d23; }
+.emvi-app { min-height: 100vh; background: #f0f2f5; color: #1a1d23; }
 
 /* ── LOGIN ── */
 .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0a1628 0%, #0d2a1a 40%, #0a1628 70%, #091420 100%); }

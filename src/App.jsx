@@ -61,7 +61,7 @@ export default function App() {
   if (!usuario) return <Login usuarios={usuarios} onLogin={(u) => { setUsuario(u); localStorage.setItem("envi_usuario", JSON.stringify(u)); }} />;
 
   return (
-    <div className="envi-app">
+    <div className="emvi-app">
       <TopBar
         usuario={usuario}
         tab={tab}
